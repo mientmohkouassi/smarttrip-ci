@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("user")
+  accounts      Account[]
+  sessions      Session[]
+  bookings      Booking[]
+  savedGems     SavedGem[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Destination {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  region      String
+  description String
+  details     String?
+  image       String
+  price       Float
+  rating      Float
+  category    String
+  featured    Boolean   @default(false)
+  bookings    Booking[]
+  savedGems   SavedGem[]
+}
+
+model Booking {
+  id            String      @id @default(cuid())
+  userId        String
+  destinationId String
+  startDate     DateTime
+  endDate       DateTime
+  totalPrice    Float
+  status        String      @default("confirmed")
+  createdAt     DateTime    @default(now())
+  
+  user          User        @relation(fields: [userId], references: [id])
+  destination   Destination @relation(fields: [destinationId], references: [id])
+}
+
+model SavedGem {
+  id            String      @id @default(cuid())
+  userId        String
+  destinationId String
+  createdAt     DateTime    @default(now())
+
+  user          User        @relation(fields: [userId], references: [id])
+  destination   Destination @relation(fields: [destinationId], references: [id])
+
+  @@unique([userId, destinationId])
+}

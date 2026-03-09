@@ -1,0 +1,204 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff8000",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#23190f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .senufo-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30L15 30z' fill='%23ff8000' fill-opacity='0.03'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<div class="relative min-h-screen w-full flex flex-col overflow-x-hidden senufo-pattern">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 px-10 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-extrabold leading-tight tracking-tight">SmartTrip CI</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Experiences</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary" href="#">About Us</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-primary/5 dark:bg-primary/10">
+<div class="text-primary flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 h-full placeholder:text-slate-400 text-sm font-medium px-4 pl-2" placeholder="Explore Ivory Coast..." value=""/>
+</div>
+</div>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center rounded-xl h-10 px-5 bg-primary text-background-dark text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+                        Plan a Trip
+                    </button>
+<div class="rounded-full size-10 border-2 border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar of a smiling traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5L3MZEHowjaoOyt4AJlUF7ciGaf-0clNxVSKa7pk386ere9mnOD7rnroejEjYjMyzncBByWqfDnpX8ZzITHJxS3Nd53miH-6mbZgQ-5uOscgIyGBBC83rBh3rnUnfQULQj6qx4d8XY7XxDCCNvMbwK_dDngUiQgFhUR4zOkOHQJJ-vXyzVGjoZQHt3it-pwCf3a-VVzRj78YFReAag3oWDOJc_nmLv6siJkvCmDjsNIB_OMMuAG9JX_Z7Aw3U-kS65KaOuH5TDodH"/>
+</div>
+</div>
+</header>
+<main class="px-4 md:px-20 lg:px-40 flex flex-1 justify-center py-12">
+<div class="layout-content-container flex flex-col max-w-[1100px] flex-1 gap-16">
+<!-- Hero Section -->
+<section class="@container">
+<div class="relative overflow-hidden rounded-3xl group">
+<div class="flex min-h-[520px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-center justify-center p-8 text-center" data-alt="Traditional Ivorian architectural landscape at sunset" style='background-image: linear-gradient(rgba(35, 25, 15, 0.4) 0%, rgba(35, 25, 15, 0.8) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDa5y4wtuhxzsPokOzNIr8gt5JX3yI8nN24Xj030Z6HNRJKlKDZ8_RzSpdxe1zi0C_Bh5dYqC-iwPYG5LEm_iMef-ly10JVc7lIbAbNmFZ6BOzZruhOx82KOrzEto8mxe6kGRG3iS2jz9h-zLQpiIeE6tN7FTXHzBTih8gnErX5DTyBVLdPHXa4SkUg2gZBrS_3cx2ql1KYcRSsRMO7vEx-BYKxu0Fc9_WAAp2a2N20TVTHAaWZ5OAaIrrYwjtRQ3771I3ENGLkq0-3");'>
+<div class="flex flex-col gap-4 max-w-3xl">
+<span class="text-primary font-bold tracking-widest uppercase text-sm">Terroir &amp; Tech</span>
+<h1 class="text-white text-5xl md:text-6xl font-black leading-tight tracking-tight">
+                                        Digitizing the Soul of <span class="text-primary">Côte d'Ivoire</span>
+</h1>
+<p class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed">
+                                        Bridging ancestral traditions with modern innovation to showcase the unparalleled beauty of West Africa's cultural jewel.
+                                    </p>
+</div>
+<div class="flex gap-4 mt-4">
+<button class="flex items-center gap-2 rounded-xl h-14 px-8 bg-primary text-background-dark text-lg font-bold hover:bg-primary/90 transition-colors shadow-xl">
+                                        Discover Our Mission
+                                        <span class="material-symbols-outlined">arrow_downward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Mission Section -->
+<section>
+<div class="flex flex-col gap-2 mb-10">
+<h2 class="text-slate-900 dark:text-slate-100 text-3xl font-extrabold leading-tight">Our Mission</h2>
+<div class="h-1.5 w-24 bg-primary rounded-full"></div>
+</div>
+<div class="p-0 md:p-1 @container">
+<div class="flex flex-col items-stretch justify-start rounded-3xl @xl:flex-row @xl:items-stretch overflow-hidden shadow-2xl shadow-primary/5 bg-white dark:bg-background-dark border border-primary/10">
+<div class="w-full @xl:w-1/2 min-h-[400px] bg-center bg-no-repeat bg-cover" data-alt="Master artisan hand-weaving traditional Kita fabric on a wooden loom" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDaj1zhH31ib8sGRMc_j8VQcVMeWZlK0IbPa-UT7L5HUxlcfSR17dbsu3g0VbWvOSy2pcCzjs9pwO-PAWEjE123GYup3ZN0mg3nr0yxfz2IWal3FWHM4PmkTU-4gbijjKM-5Y3I_luhKF4hH4hpbMH_60-EGnwe1jlOrM-T_DExLs66V-Vrs5Nqf4cHpqMIOPvYBr526oFV5PBM0rdowUosllPR7roifwze7sEr8ONRxHSWK0ugHXXlhmcqrV9mr2rZraKFomcfUEIb");'>
+</div>
+<div class="flex w-full @xl:w-1/2 flex-col items-start justify-center gap-8 p-10 lg:p-16">
+<div class="flex flex-col gap-4">
+<h3 class="text-slate-900 dark:text-slate-100 text-2xl lg:text-3xl font-extrabold leading-tight">Preserving Heritage through Digital Innovation</h3>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                                            We empower local artisans and digitize the travel experience to make Ivorian culture accessible to the world. Our platform isn't just a booking tool—it's a digital bridge.
+                                        </p>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                                            From the intricate geometry of Kita fabric to the sacred mask dances of Man, we connect travelers with authentic, sustainable experiences that honor our ancestors.
+                                        </p>
+</div>
+<div class="grid grid-cols-2 gap-6 w-full py-4 border-y border-primary/10">
+<div class="flex flex-col">
+<span class="text-primary text-3xl font-black">500+</span>
+<span class="text-slate-500 text-sm font-semibold uppercase">Artisans Partnered</span>
+</div>
+<div class="flex flex-col">
+<span class="text-primary text-3xl font-black">15+</span>
+<span class="text-slate-500 text-sm font-semibold uppercase">Regions Digitized</span>
+</div>
+</div>
+<button class="group flex items-center gap-2 rounded-xl h-12 px-6 bg-primary/10 text-primary text-base font-bold hover:bg-primary hover:text-white transition-all">
+                                        Read Our Story
+                                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Partners Section -->
+<section class="py-12 border-t border-primary/10">
+<div class="flex flex-col items-center gap-10">
+<div class="text-center">
+<h4 class="text-primary text-sm font-black leading-normal tracking-[0.2em] uppercase mb-2">Institutional Support</h4>
+<h3 class="text-2xl font-bold text-slate-800 dark:text-slate-200">Our Strategic Partners</h3>
+</div>
+<div class="flex flex-wrap justify-center items-center gap-12 lg:gap-24 opacity-70 grayscale hover:grayscale-0 transition-all">
+<!-- Sublime Cote d'Ivoire Placeholder Logo -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center p-3">
+<span class="material-symbols-outlined text-primary text-3xl">account_balance</span>
+</div>
+<span class="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-primary">Sublime Côte d'Ivoire</span>
+</div>
+<!-- Local Brand Placeholder 1 -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center p-3">
+<span class="material-symbols-outlined text-primary text-3xl">flight</span>
+</div>
+<span class="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-primary">Air Côte d'Ivoire</span>
+</div>
+<!-- Local Brand Placeholder 2 -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center p-3">
+<span class="material-symbols-outlined text-primary text-3xl">museum</span>
+</div>
+<span class="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-primary">Musée National</span>
+</div>
+<!-- Local Brand Placeholder 3 -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center p-3">
+<span class="material-symbols-outlined text-primary text-3xl">eco</span>
+</div>
+<span class="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-primary">EcoTravel CI</span>
+</div>
+<!-- Local Brand Placeholder 4 -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center p-3">
+<span class="material-symbols-outlined text-primary text-3xl">handyman</span>
+</div>
+<span class="text-xs font-bold text-slate-500 dark:text-slate-400 group-hover:text-primary">Artisans-CI</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary/5 dark:bg-primary/5 border-t border-primary/10 px-10 py-12 mt-auto">
+<div class="max-w-[1100px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-6">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight">SmartTrip CI</h2>
+</div>
+<p class="text-slate-500 text-sm font-medium">
+                        © 2024 SmartTrip CI. Empowering tourism through digital transformation.
+                    </p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">language</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">share</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">contact_support</span>
+</div>
+</div>
+</footer>
+</div>
+</div>
+
+```</body></html>

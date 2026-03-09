@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartTrip CI Partner Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff8000",
+                        "emerald-custom": "#009E60",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#23190f",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-10 py-3 bg-white dark:bg-slate-900">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">map</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight tracking-tight">SmartTrip CI</h2>
+</div>
+<div class="hidden md:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-slate-100 dark:bg-slate-800">
+<div class="text-slate-500 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 h-full placeholder:text-slate-500 px-4 text-base" placeholder="Search analytics..."/>
+</div>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-slate-700 dark:text-slate-300 text-sm font-semibold" href="#">Dashboard</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-semibold" href="#">Hotels</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-semibold" href="#">Payouts</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-semibold" href="#">Support</a>
+</nav>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary/90 transition-colors">
+                    Partner Portal
+                </button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200" data-alt="User profile portrait of a male partner" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBSglTK7rAxTb3EOSCi1j-RzywgdMO5mwlZHR41t1yUwmA6Q4dw_-pmQbdZ0Qu8qwhg8cdEiaHAcKuquyErK78casCBt1ZCZEFa-70rkDDOiKsX1MrjzCRyBSc2tZ6Hi7Zn_ccyL3C1y8oS1CxLPfW-oi34_KjyiRrM-TiDohvaSmhl1gPDEBHtwcWz9wQK1YVb9fO0A7YSyMMgSTqbFxkMpT7OCjae-eMzQaPowGphcQ1vuBPjZFSlKV4ZdYQk11VldUN8NHyGcy4r");'></div>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto w-full px-6 py-8">
+<!-- Artisan Analytics Section -->
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-bold uppercase tracking-widest">Performance Hub</span>
+</div>
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl font-black leading-tight">Artisan Analytics</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Real-time insight tracking for hospitality partners in Côte d'Ivoire</p>
+</div>
+<button class="flex items-center gap-2 rounded-xl h-11 px-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-bold">
+<span class="material-symbols-outlined text-xl">download</span>
+                    Export CSV Report
+                </button>
+</div>
+<!-- Wave Money Payout Notification -->
+<div class="mb-8 @container">
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border-2 border-emerald-custom/20 bg-emerald-custom/5 p-6 backdrop-blur-sm">
+<div class="flex items-center gap-5">
+<div class="size-14 rounded-full bg-emerald-custom flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl">account_balance_wallet</span>
+</div>
+<div class="flex flex-col">
+<p class="text-emerald-custom text-xl font-extrabold leading-tight">Wave Money Payout Ready</p>
+<p class="text-slate-700 dark:text-slate-300 text-base">Your earnings of <span class="font-bold">850,000 CFA</span> are ready for withdrawal to your Wave account.</p>
+</div>
+</div>
+<button class="w-full md:w-auto flex min-w-[160px] cursor-pointer items-center justify-center rounded-xl h-12 px-6 bg-emerald-custom text-white text-base font-bold shadow-md hover:bg-emerald-custom/90 transition-transform active:scale-95">
+                        Transfer Now
+                    </button>
+</div>
+</div>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold uppercase">Total Bookings</p>
+<div class="flex items-end gap-2 mt-2">
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">1,284</p>
+<p class="text-emerald-custom text-sm font-bold mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> +8.2%
+                        </p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold uppercase">Monthly Revenue</p>
+<div class="flex items-end gap-2 mt-2">
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">4.2M CFA</p>
+<p class="text-emerald-custom text-sm font-bold mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> +12.4%
+                        </p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold uppercase">Customer reach</p>
+<div class="flex items-end gap-2 mt-2">
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">24.5k</p>
+<p class="text-emerald-custom text-sm font-bold mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> +5.1%
+                        </p>
+</div>
+</div>
+</div>
+<!-- Chart Section -->
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-800 mb-12 shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Revenue Growth Overview</h3>
+<p class="text-slate-500 text-sm">Performance tracking for Jan - Jun 2024</p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-400">Weekly</span>
+<span class="px-3 py-1 bg-primary/10 rounded-full text-xs font-bold text-primary border border-primary/20">Monthly</span>
+</div>
+</div>
+<div class="relative h-64 w-full">
+<!-- Simplified Visual Representation of a Growth Chart -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ff8000" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#ff8000" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,180 Q100,160 200,120 T400,100 T600,60 T800,40 V200 H0 Z" fill="url(#chartGradient)"></path>
+<path d="M0,180 Q100,160 200,120 T400,100 T600,60 T800,40" fill="none" stroke="#ff8000" stroke-linecap="round" stroke-width="4"></path>
+<!-- Grid Lines -->
+<line class="text-slate-100 dark:text-slate-800" stroke="currentColor" stroke-dasharray="4" x1="0" x2="800" y1="50" y2="50"></line>
+<line class="text-slate-100 dark:text-slate-800" stroke="currentColor" stroke-dasharray="4" x1="0" x2="800" y1="100" y2="100"></line>
+<line class="text-slate-100 dark:text-slate-800" stroke="currentColor" stroke-dasharray="4" x1="0" x2="800" y1="150" y2="150"></line>
+</svg>
+<div class="flex justify-between mt-4 text-slate-400 text-xs font-bold uppercase tracking-wider">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+</div>
+</div>
+</div>
+<!-- Boutique Hotels Section -->
+<div class="mb-12">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-2xl font-black text-slate-900 dark:text-slate-100">Featured Boutique Hotels in Abidjan</h3>
+<a class="text-primary font-bold hover:underline flex items-center gap-1" href="#">
+                        View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Hotel Card 1 -->
+<div class="group cursor-pointer rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all">
+<div class="relative h-60 w-full overflow-hidden">
+<div class="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-current">star</span>
+<span class="text-xs font-bold text-slate-900">4.9</span>
+</div>
+<div class="absolute top-4 left-4 z-10 bg-primary px-3 py-1 rounded-full text-[10px] font-black uppercase text-white tracking-widest">Premium</div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Luxury boutique hotel exterior with palm trees in Abidjan" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBcKxpPeKxZFpIcAXtREqEFXQd158mDQp6dA4UnVYmU9VJvChsdBQIw-vFWORRRtFhzkZoqb14-3PZTh8zK70qgcPpQ68Y1clpPMxYWNwa-EF5ovL4rCCSrcBDw-ZthT7JDZrOVoy_JBVxXbTBSLiqs08wpiuBlzbqzFmMZMymKgfZEfTxAO4SooleFJ6Yhwlfn0BehNc5mLyqnWwZWxFSWTBd0TRMbvWHN0vTXRLxcc0GBuwCyQNRGyFfYOIJEiQpG-nTP68eeZUhk");'></div>
+</div>
+<div class="p-6">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-tighter">Cocody, Abidjan</p>
+<h4 class="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">Villa Lepic Boutique Hotel</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2">A historical gem offering colonial elegance and modern luxury in the heart of Cocody.</p>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-lg font-black text-primary">145,000 CFA<span class="text-xs font-normal text-slate-400">/night</span></span>
+<button class="size-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Hotel Card 2 -->
+<div class="group cursor-pointer rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all">
+<div class="relative h-60 w-full overflow-hidden">
+<div class="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-current">star</span>
+<span class="text-xs font-bold text-slate-900">4.7</span>
+</div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Modern minimalist hotel suite overlooking the lagoon in Abidjan" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCM7hN13aD4GfcQyQ9HKSehqxDQGM2eVcMsO8IZoDpEwCaeHHgpfu1i-54g-trOS71_1C1gmp9SEwOoOgozi3P2c8pVY16JGZ2N_boEmcaguA4sn_N_0y5rOe58vqOCkNM2wIWtLqRAR3-yUBR62ot2CZHoFnnxaViPl0joXo4W0l75WGYARYtcWXwUsxkE_NCBl4Iqy4c5rq54RWOYf2GEQOdFuw_783J5uWKEQhsp7k5ooIoJxweWElnUWUV26vmAZZli3v88MvZe");'></div>
+</div>
+<div class="p-6">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-tighter">Plateau, Abidjan</p>
+<h4 class="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">Noom Hotel Abidjan</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2">Avant-garde architecture and breathtaking lagoon views for the modern traveler.</p>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-lg font-black text-primary">168,000 CFA<span class="text-xs font-normal text-slate-400">/night</span></span>
+<button class="size-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Hotel Card 3 -->
+<div class="group cursor-pointer rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all">
+<div class="relative h-60 w-full overflow-hidden">
+<div class="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-current">star</span>
+<span class="text-xs font-bold text-slate-900">4.8</span>
+</div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Eco-friendly resort pool area with tropical plants" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwpEnbpnUqAa4LaF8qiZgiYFFanJj5cyGUSdcydgL_2DGe344k4UFTwNJ3sq1jprFwzsyoSgig5LYh-Qv4Ouah6drdrieazyzDtWphAlWHcJB3ywQbql8G_odKFy-j8KCId1u6qmTmuSUIbqmZCeGoOKlJGmP63T7quv66JQG6wEs1B-p-Pyl-bif0m5bSWu5RZsFPZATDTBASUphuO8Sh9iIBofyesKElGc0rzW3v9-85fNQIdsIBirqgDeYDDjzf0iNF1j8jUcUw");'></div>
+</div>
+<div class="p-6">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-tighter">Marcory, Abidjan</p>
+<h4 class="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">Azalaï Hotel Abidjan</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2">Authentic West African hospitality combined with 5-star international standards.</p>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-lg font-black text-primary">125,000 CFA<span class="text-xs font-normal text-slate-400">/night</span></span>
+<button class="size-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-900 text-slate-400 py-12 px-10 border-t border-slate-800 mt-auto">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 text-white mb-6">
+<span class="material-symbols-outlined text-2xl">map</span>
+<h2 class="text-lg font-bold">SmartTrip CI</h2>
+</div>
+<p class="text-sm leading-relaxed">Elevating the travel experience across Côte d'Ivoire through innovation and authentic local partnerships.</p>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">For Partners</h5>
+<ul class="space-y-4 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Join the Network</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Artisan Portal</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Growth Resources</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">API Docs</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Legal</h5>
+<ul class="space-y-4 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Partner Agreement</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Support</h5>
+<div class="flex flex-col gap-4">
+<button class="bg-primary text-white rounded-xl py-2 px-4 font-bold text-sm">Contact Support</button>
+<p class="text-xs">Available 24/7 for premium partners in Abidjan &amp; Yamoussoukro.</p>
+</div>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto pt-12 mt-12 border-t border-slate-800 text-xs flex justify-between">
+<p>© 2024 SmartTrip CI. All rights reserved.</p>
+<div class="flex gap-4">
+<a class="hover:text-white" href="#">LinkedIn</a>
+<a class="hover:text-white" href="#">Instagram</a>
+<a class="hover:text-white" href="#">Twitter</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>
