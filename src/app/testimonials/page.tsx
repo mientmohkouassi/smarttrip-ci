@@ -73,9 +73,9 @@ export default function TestimonialsPage() {
         <div className="min-h-screen bg-savannah font-poppins text-slate-900">
             <Header />
 
-            <main className="py-24 px-6 lg:px-20 max-w-7xl mx-auto">
+            <main className="py-12 md:py-24 px-4 md:px-6 lg:px-20 max-w-7xl mx-auto">
                 {/* Hero Header */}
-                <div className="text-center mb-24">
+                <div className="text-center mb-12 md:mb-24">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -86,7 +86,7 @@ export default function TestimonialsPage() {
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-5xl lg:text-7xl font-black tracking-tighter mb-6"
+                        className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter mb-6"
                     >
                         Voices of the <span className="text-primary italic">Savannah</span>
                     </motion.h1>
@@ -100,8 +100,8 @@ export default function TestimonialsPage() {
                 </div>
 
                 {/* Video Stories Placeholder */}
-                <div className="mb-32">
-                    <div className="flex justify-between items-end mb-12">
+                <div className="mb-20 md:mb-32">
+                    <div className="flex justify-between items-end mb-6 md:mb-12">
                         <div>
                             <h2 className="text-3xl font-black tracking-tight">Story Mode</h2>
                             <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-1">Immersive Video Reviews</p>
@@ -112,7 +112,8 @@ export default function TestimonialsPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Mobile: horizontal scroll row — Desktop: 3-col grid */}
+                    <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible pb-4 md:pb-0 snap-x snap-mandatory">
                         {[
                             {
                                 id: 1,
@@ -136,7 +137,7 @@ export default function TestimonialsPage() {
                             <motion.div
                                 key={item.id}
                                 whileHover={{ scale: 1.02 }}
-                                className="relative aspect-[9/16] bg-slate-200 rounded-[2.5rem] overflow-hidden group shadow-2xl"
+                                className="relative flex-shrink-0 w-[58vw] sm:w-[45vw] md:w-auto snap-start aspect-[9/16] bg-slate-200 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden group shadow-2xl"
                             >
                                 <video
                                     src={item.video}

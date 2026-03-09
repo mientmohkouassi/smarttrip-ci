@@ -106,9 +106,9 @@ export default function TouristicCarousel() {
                         <motion.div
                             animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.85 }}
                             transition={{ duration: 0.3 }}
-                            className="bg-primary/90 backdrop-blur-md text-white px-10 py-5 rounded-full font-black text-lg uppercase tracking-wide shadow-2xl flex items-center gap-3 pointer-events-none"
+                            className="bg-primary/90 backdrop-blur-md text-white px-5 py-3 md:px-10 md:py-5 rounded-full font-black text-xs md:text-lg uppercase tracking-wide shadow-2xl flex items-center gap-2 md:gap-3 pointer-events-none"
                         >
-                            Book This Trip <ChevronRight className="w-5 h-5" />
+                            Book This Trip <ChevronRight className="w-3 h-3 md:w-5 md:h-5" />
                         </motion.div>
                     </Link>
 
