@@ -38,9 +38,9 @@ export default function TouristicCarousel() {
     const currentImage = carouselImages[currentSlide];
 
     return (
-        <section className="py-32 px-6 lg:px-20 bg-white">
+        <section className="py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-20 bg-white">
             <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
+                <div className="flex flex-col md:flex-row justify-between items-end gap-4 mb-8 md:mb-16">
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -49,7 +49,7 @@ export default function TouristicCarousel() {
                         <div className="flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px] mb-4">
                             <Camera className="w-4 h-4" /> Visual Journey
                         </div>
-                        <h2 className="text-4xl lg:text-6xl font-black text-slate-900 tracking-tighter capitalize">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-black text-slate-900 tracking-tighter capitalize">
                             Discover the <span className="text-primary italic">Soul</span> <br /> of Côte d&apos;Ivoire
                         </h2>
                     </motion.div>
@@ -57,14 +57,14 @@ export default function TouristicCarousel() {
                         initial={{ opacity: 0, x: 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="text-slate-500 font-medium max-w-sm text-lg leading-relaxed"
+                        className="text-slate-500 font-medium max-w-sm text-base lg:text-lg leading-relaxed"
                     >
                         Immerse yourself in a land of contrast. Hover to pause, click to book your adventure.
                     </motion.p>
                 </div>
 
                 <div
-                    className="relative h-[600px] rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)]"
+                    className="relative rounded-[2rem] md:rounded-[3.5rem] overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.18)] aspect-[4/3] sm:aspect-[16/9] md:h-[520px] lg:h-[600px] md:aspect-auto"
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                 >
@@ -79,17 +79,17 @@ export default function TouristicCarousel() {
                             style={{ backgroundImage: `url('${currentImage.url}')` }}
                         >
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/10 to-transparent" />
-                            <div className="absolute bottom-16 left-16 max-w-xl">
+                            <div className="absolute bottom-6 left-6 md:bottom-16 md:left-16 max-w-[70%] md:max-w-xl">
                                 <motion.div
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.5 }}
                                 >
                                     <span className="bg-primary px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white mb-4 inline-block">Featured Destination</span>
-                                    <h3 className="text-5xl lg:text-6xl font-black text-white mb-6 uppercase tracking-tighter">
+                                    <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black text-white mb-3 md:mb-6 uppercase tracking-tighter">
                                         {currentImage.title}
                                     </h3>
-                                    <p className="text-white/70 text-xl font-medium leading-relaxed">
+                                    <p className="hidden sm:block text-white/70 text-base md:text-xl font-medium leading-relaxed">
                                         {currentImage.description}
                                     </p>
                                 </motion.div>
@@ -113,18 +113,18 @@ export default function TouristicCarousel() {
                     </Link>
 
                     {/* Navigation arrows — z-20 to be above the Link overlay */}
-                    <div className="absolute bottom-16 right-16 flex gap-4 z-20">
+                    <div className="absolute bottom-6 right-6 md:bottom-16 md:right-16 flex gap-2 md:gap-4 z-20">
                         <button
                             onClick={(e) => { e.stopPropagation(); e.preventDefault(); goPrev(); }}
-                            className="size-16 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white border border-white/20 transition-all hover:scale-110 active:scale-95"
+                            className="size-10 md:size-16 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-xl md:rounded-2xl flex items-center justify-center text-white border border-white/20 transition-all hover:scale-110 active:scale-95"
                         >
-                            <ChevronLeft className="w-8 h-8" />
+                            <ChevronLeft className="w-5 h-5 md:w-8 md:h-8" />
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); e.preventDefault(); goNext(); }}
-                            className="size-16 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white border border-white/20 transition-all hover:scale-110 active:scale-95"
+                            className="size-10 md:size-16 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-xl md:rounded-2xl flex items-center justify-center text-white border border-white/20 transition-all hover:scale-110 active:scale-95"
                         >
-                            <ChevronRight className="w-8 h-8" />
+                            <ChevronRight className="w-5 h-5 md:w-8 md:h-8" />
                         </button>
                     </div>
 

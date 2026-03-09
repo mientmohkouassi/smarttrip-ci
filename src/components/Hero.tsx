@@ -18,15 +18,15 @@ export default function Hero() {
     };
 
     return (
-        <section className="flex flex-col lg:flex-row min-h-[85vh] overflow-hidden">
-            <div className="w-full lg:w-1/2 bg-savannah flex items-center px-6 py-20 lg:px-20 relative">
+        <section className="flex flex-col lg:flex-row min-h-[85vh] overflow-hidden" id="hero">
+            <div className="w-full lg:w-1/2 bg-savannah flex items-center px-5 py-10 md:py-16 lg:px-20 lg:py-20 relative">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="max-w-2xl relative z-10"
                 >
-                    <h1 className="font-poppins text-slate-900 text-5xl lg:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
+                    <h1 className="font-poppins text-slate-900 text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold leading-[1.1] mb-4 lg:mb-6 tracking-tight">
                         Explore <br />
                         <motion.span
                             initial={{ color: "#0f172a" }}
@@ -39,7 +39,7 @@ export default function Hero() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4, duration: 0.8 }}
-                        className="text-slate-600 text-lg lg:text-xl mb-12 max-w-lg leading-relaxed"
+                        className="text-slate-600 text-sm md:text-lg lg:text-xl mb-7 lg:mb-12 max-w-lg leading-relaxed"
                     >
                         Discover the hidden gems of the Ivory Coast with our AI-powered travel companion. From the beaches of Assinie to the peaks of Man.
                     </motion.p>
@@ -135,7 +135,7 @@ export default function Hero() {
                 </motion.div>
             </div>
 
-            <div className="w-full lg:w-1/2 relative min-h-[400px] lg:min-h-full overflow-hidden">
+            <div className="w-full lg:w-1/2 relative min-h-[280px] sm:min-h-[360px] lg:min-h-full overflow-hidden">
                 <motion.div
                     initial={{ scale: 1.2, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
