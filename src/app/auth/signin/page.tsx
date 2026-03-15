@@ -123,8 +123,12 @@ function SignInContent() {
                                     aria-label={showPassword ? "Hide password" : "Show password"}
                                     className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                                 >
-                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
+                            </div>
+                            <div className="flex justify-end mt-2">
+                                <Link href="/auth/forgot-password" title="Forgot password recovery link" className="text-xs font-bold text-slate-500 hover:text-primary transition-colors">
+                                    Forgot Password?
+                                </Link>
                             </div>
                         </div>
 
