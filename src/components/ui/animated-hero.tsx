@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Calendar, Users, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { destinations } from "@/lib/data";
+import { getDestinations } from "@/lib/actions";
+
+type DestinationSummary = { id: string; name: string; region: string; category: string };
 
 function Hero() {
     const router = useRouter();
@@ -22,11 +24,18 @@ function Hero() {
     });
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [allDestinations, setAllDestinations] = useState<DestinationSummary[]>([]);
+
+    useEffect(() => {
+        getDestinations().then((data) => {
+            setAllDestinations(data.map(d => ({ id: d.id, name: d.name, region: d.region, category: d.category })));
+        });
+    }, []);
 
     // Live autocomplete: filter destinations based on what's typed
     const locationQuery = searchState.location.toLowerCase().trim();
     const filteredLocations = useMemo(() => {
-        return destinations
+        return allDestinations
             .filter((d) =>
                 !locationQuery ||
                 d.name.toLowerCase().includes(locationQuery) ||
@@ -34,7 +43,7 @@ function Hero() {
                 d.category.toLowerCase().includes(locationQuery)
             )
             .slice(0, 7); // max 7 suggestions
-    }, [locationQuery]);
+    }, [locationQuery, allDestinations]);
 
     const dates = ["This Weekend", "Next Week", "Next Month", "April Special", "Summer 2025"];
     const travelersOptions = ["1 Traveler", "2 Travelers", "3-5 People (Group)", "6+ People (Large)", "Family (with kids)"];

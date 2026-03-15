@@ -5,25 +5,11 @@ import { useSession, signOut as nextAuthSignOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { LogOut, LayoutDashboard, ChevronDown, User, Briefcase, MapPin, Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import { getCurrentUser, signOutLocal, type AuthUser } from '@/lib/auth-client';
 
 export default function Header() {
     const { data: session } = useSession();
-    const [localUser, setLocalUser] = useState<AuthUser | null>(null);
     const [showMenu, setShowMenu] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
-
-    // Read localStorage user on mount + whenever storage changes
-    useEffect(() => {
-        const read = () => setLocalUser(getCurrentUser());
-        read();
-        window.addEventListener("storage", read);
-        const interval = setInterval(read, 2000);
-        return () => {
-            window.removeEventListener("storage", read);
-            clearInterval(interval);
-        };
-    }, []);
 
     // Close mobile menu on resize to desktop
     useEffect(() => {
@@ -32,18 +18,16 @@ export default function Header() {
         return () => window.removeEventListener('resize', onResize);
     }, []);
 
-    const user = localUser ?? (session?.user ? {
+    const user = session?.user ? {
         name: session.user.name ?? "User",
         email: session.user.email ?? "",
         role: (session.user as { role?: string }).role ?? "user",
         avatar: session.user.image ?? null,
-    } : null);
+    } : null;
 
     const isPartner = user?.role === "partner";
 
     const handleSignOut = async () => {
-        signOutLocal();
-        setLocalUser(null);
         setShowMenu(false);
         setMobileOpen(false);
         await nextAuthSignOut({ callbackUrl: "/" });

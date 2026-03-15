@@ -1,26 +1,30 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { destinations } from "@/lib/data";
+import { getDestinationById } from "@/lib/actions";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Suspense, useState } from "react";
-import { MapPin, Calendar, Users, Shield, CreditCard, CheckCircle, Loader2, Phone, Mail, MessageSquare, ArrowLeft, AlertCircle } from "lucide-react";
+import { Suspense, useState, useEffect } from "react";
+import { MapPin, Calendar, Users, Shield, CreditCard, CheckCircle, Loader2, Phone, Mail, MessageSquare, ArrowLeft, AlertCircle, Star } from "lucide-react";
 import Link from "next/link";
+import type { Destination } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 function BookingContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { data: session } = useSession();
     const destId = searchParams.get("id");
-    const destination = destinations.find((d) => d.id === destId);
 
+    const [destination, setDestination] = useState<Destination | null>(null);
+    const [loadingDest, setLoadingDest] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [bookingData, setBookingData] = useState<{ id: string; destinationName: string } | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [form, setForm] = useState({
-        name: "",
-        email: "",
+        name: (session?.user?.name) ?? "",
+        email: (session?.user?.email) ?? "",
         phone: "",
         checkIn: "",
         checkOut: "",
@@ -28,15 +32,23 @@ function BookingContent() {
         requests: "",
     });
 
-    if (!destination) {
-        return (
-            <div className="container mx-auto px-6 py-24 text-center">
-                <div className="text-6xl mb-4">🔍</div>
-                <h2 className="text-2xl font-black text-slate-900 mb-4">Destination not found</h2>
-                <Link href="/" className="text-primary font-bold hover:underline">← Browse destinations</Link>
-            </div>
-        );
-    }
+    useEffect(() => {
+        if (session?.user) {
+            setForm(f => ({
+                ...f,
+                name: session.user?.name ?? "",
+                email: session.user?.email ?? "",
+            }));
+        }
+    }, [session]);
+
+    useEffect(() => {
+        if (!destId) { setLoadingDest(false); return; }
+        getDestinationById(destId).then((d) => {
+            setDestination(d as Destination | null);
+            setLoadingDest(false);
+        });
+    }, [destId]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -47,10 +59,10 @@ function BookingContent() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    destinationId: destination.id,
+                    destinationId: destination!.id,
                     startDate: form.checkIn,
                     endDate: form.checkOut,
-                    totalPrice: destination.price,
+                    totalPrice: destination!.price,
                     guestName: form.name,
                     guestEmail: form.email,
                 }),
@@ -63,26 +75,6 @@ function BookingContent() {
                 return;
             }
 
-            // Persist booking to localStorage so Dashboard can display it
-            try {
-                const existing = JSON.parse(localStorage.getItem("smarttrip_bookings") || "[]");
-                const newBooking = {
-                    id: data.id,
-                    destinationId: destination.id,
-                    destinationName: destination.name,
-                    startDate: form.checkIn,
-                    endDate: form.checkOut,
-                    totalPrice: destination.price,
-                    guestName: form.name,
-                    guestEmail: form.email,
-                    status: "confirmed",
-                    bookedAt: new Date().toISOString(),
-                };
-                localStorage.setItem("smarttrip_bookings", JSON.stringify([newBooking, ...existing]));
-            } catch {
-                // localStorage not available — non-fatal
-            }
-
             setBookingData(data);
         } catch (err) {
             console.error("Booking error:", err);
@@ -91,6 +83,24 @@ function BookingContent() {
             setIsSubmitting(false);
         }
     };
+
+    if (loadingDest) {
+        return (
+            <div className="flex justify-center py-32">
+                <Loader2 className="w-12 h-12 text-primary animate-spin" />
+            </div>
+        );
+    }
+
+    if (!destination) {
+        return (
+            <div className="container mx-auto px-6 py-24 text-center">
+                <div className="text-6xl mb-4">🔍</div>
+                <h2 className="text-2xl font-black text-slate-900 mb-4">Destination not found</h2>
+                <Link href="/destinations" className="text-primary font-bold hover:underline">← Browse destinations</Link>
+            </div>
+        );
+    }
 
     if (bookingData) {
         return (
@@ -148,7 +158,6 @@ function BookingContent() {
 
     return (
         <div className="container mx-auto px-6 py-12 max-w-5xl">
-            {/* Back button */}
             <button onClick={() => router.back()} className="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors mb-8 font-bold text-sm group">
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to results
             </button>
@@ -251,7 +260,7 @@ function BookingContent() {
                                 </div>
                             ))}
                         </div>
-                        {/* Error message */}
+
                         {error && (
                             <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-2xl px-5 py-4">
                                 <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -289,6 +298,11 @@ function BookingContent() {
                                 <div className="absolute top-4 right-4 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-black text-primary">{destination.category}</div>
                             </div>
                             <div className="p-6">
+                                <div className="flex items-center gap-1 mb-4">
+                                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                    <span className="font-black text-slate-900">{destination.rating}</span>
+                                    <span className="text-slate-400 text-xs ml-1">rating</span>
+                                </div>
                                 <p className="text-slate-500 text-sm leading-relaxed mb-5">{destination.description}</p>
                                 <div className="space-y-3 border-t border-slate-50 pt-5">
                                     <div className="flex justify-between text-sm">

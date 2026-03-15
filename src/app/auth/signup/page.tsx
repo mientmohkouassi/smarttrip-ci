@@ -8,7 +8,9 @@ import {
     Mail, Lock, Eye, EyeOff, User, Phone, AlertCircle, Loader2,
     Building2, ArrowRight, ArrowLeft, Plane, Briefcase, Check
 } from "lucide-react";
-import { signUpLocal, type UserRole } from "@/lib/auth-client";
+import { type UserRole } from "@/lib/auth-client";
+import { signUpUser } from "@/lib/actions";
+import { signIn } from "next-auth/react";
 
 type Step = 1 | 2 | 3;
 
@@ -71,7 +73,7 @@ export default function SignUpPage() {
         // Simulate network delay
         await new Promise((r) => setTimeout(r, 1200));
 
-        const result = signUpLocal({
+        const result = await signUpUser({
             name: form.name,
             email: form.email,
             password: form.password,
@@ -84,10 +86,17 @@ export default function SignUpPage() {
         setIsLoading(false);
 
         if (!result.success) {
-            setError(result.error);
+            setError(result.error || "Signup failed");
             setStep(1);
             return;
         }
+
+        // Auto sign-in
+        await signIn("credentials", {
+            email: form.email,
+            password: form.password,
+            redirect: false,
+        });
 
         // Always go to onboarding after signup
         router.push("/auth/onboarding");
@@ -133,8 +142,8 @@ export default function SignUpPage() {
                         <div key={s.n} className="flex items-center">
                             <div className="flex flex-col items-center">
                                 <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all duration-500 ${step > s.n ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30" :
-                                        step === s.n ? "bg-primary text-white shadow-xl shadow-primary/40 ring-4 ring-primary/20" :
-                                            "bg-white/5 text-slate-500 border border-white/10"
+                                    step === s.n ? "bg-primary text-white shadow-xl shadow-primary/40 ring-4 ring-primary/20" :
+                                        "bg-white/5 text-slate-500 border border-white/10"
                                     }`}>
                                     {step > s.n ? <Check className="w-4 h-4" /> : s.n}
                                 </div>
@@ -223,8 +232,8 @@ export default function SignUpPage() {
                                     <div className="flex gap-1 mt-2">
                                         {[1, 2, 3, 4].map((n) => (
                                             <div key={n} className={`h-1 flex-1 rounded-full transition-all duration-500 ${form.password.length >= n * 3 ?
-                                                    (form.password.length >= 10 ? "bg-emerald-500" : form.password.length >= 7 ? "bg-amber-500" : "bg-red-500")
-                                                    : "bg-white/10"
+                                                (form.password.length >= 10 ? "bg-emerald-500" : form.password.length >= 7 ? "bg-amber-500" : "bg-red-500")
+                                                : "bg-white/10"
                                                 }`} />
                                         ))}
                                     </div>
@@ -269,8 +278,8 @@ export default function SignUpPage() {
                                     ] as const).map((opt) => (
                                         <button key={opt.value} type="button" onClick={() => setRole(opt.value)}
                                             className={`p-6 rounded-3xl border-2 text-left transition-all duration-300 ${role === opt.value
-                                                    ? "border-primary bg-primary/10 shadow-xl shadow-primary/20"
-                                                    : "border-white/10 bg-white/5 hover:border-white/20"
+                                                ? "border-primary bg-primary/10 shadow-xl shadow-primary/20"
+                                                : "border-white/10 bg-white/5 hover:border-white/20"
                                                 }`}
                                         >
                                             <div className={`mb-4 transition-colors ${role === opt.value ? "text-primary" : "text-slate-500"}`}>{opt.icon}</div>

@@ -1,41 +1,49 @@
 import { NextResponse } from "next/server";
-
-// Destination name lookup (same as data.ts, avoids Prisma dependency issues)
-const DESTINATION_NAMES: Record<string, string> = {
-    "1": "Assinie-Mafia",
-    "2": "Yamoussoukro",
-    "3": "Grand-Bassam",
-    "4": "Man",
-    "5": "Abidjan Plateau",
-    "6": "Korhogo",
-    "7": "San Pédro",
-    "8": "Taï National Park",
-};
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function POST(req: Request) {
     try {
+        const session = await auth();
         const body = await req.json();
         const { destinationId, startDate, endDate, totalPrice, guestName, guestEmail } = body;
 
-        // Validate required fields
         if (!destinationId || !startDate || !endDate || !totalPrice) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Resolve destination name
-        const destinationName = DESTINATION_NAMES[destinationId] ?? "Your Destination";
+        // Resolve destination from database
+        const destination = await prisma.destination.findUnique({ where: { id: destinationId } });
+        if (!destination) {
+            return NextResponse.json({ error: "Destination not found" }, { status: 404 });
+        }
 
-        // Generate a unique booking reference
-        const bookingRef = `STR-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+        // If a user is logged in, save the booking to the DB linked to their account
+        let bookingId: string;
 
-        // Return success — DB persistence and email are best-effort on the backend
-        // In production, these would be queued jobs
-        console.log(`[Booking] ${bookingRef} | ${destinationName} | ${guestName} <${guestEmail}> | ${startDate} → ${endDate}`);
+        if (session?.user?.id) {
+            const booking = await prisma.booking.create({
+                data: {
+                    userId: (session.user as any).id,
+                    destinationId,
+                    startDate: new Date(startDate),
+                    endDate: new Date(endDate),
+                    totalPrice,
+                    status: "confirmed",
+                },
+            });
+            bookingId = booking.id;
+        } else {
+            // Guest booking — generate a reference without DB (no userId available)
+            bookingId = `STR-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+        }
+
+        console.log(`[Booking] ${bookingId} | ${destination.name} | ${guestName} <${guestEmail}>`);
 
         return NextResponse.json({
-            id: bookingRef,
+            id: bookingId,
             status: "confirmed",
-            destinationName,
+            destinationName: destination.name,
             guestName: guestName || "Guest",
             startDate,
             endDate,

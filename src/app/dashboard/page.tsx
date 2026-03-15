@@ -3,56 +3,70 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MapPin, Calendar, Clock, Heart, Plane, ArrowRight, Star, Compass } from "lucide-react";
+import { MapPin, Calendar, Clock, Heart, Plane, ArrowRight, Star, Compass, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { destinations } from "@/lib/data";
+import { useSession } from "next-auth/react";
 
-interface StoredBooking {
+interface DBBooking {
     id: string;
     destinationId: string;
-    destinationName: string;
     startDate: string;
     endDate: string;
     totalPrice: number;
-    guestName: string;
-    guestEmail: string;
     status: string;
-    bookedAt: string;
+    destination?: {
+        name: string;
+        image: string;
+        region: string;
+        rating: number;
+    };
 }
 
 export default function DashboardPage() {
-    const [bookings, setBookings] = useState<StoredBooking[]>([]);
+    const { data: session, status } = useSession();
+    const [bookings, setBookings] = useState<DBBooking[]>([]);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        try {
-            const raw = localStorage.getItem("smarttrip_bookings");
-            if (raw) setBookings(JSON.parse(raw));
-        } catch {
-            setBookings([]);
-        }
-        setLoaded(true);
-    }, []);
+        if (status === "loading") return;
+        if (!session?.user) { setLoaded(true); return; }
+
+        // Fetch user's bookings from the API
+        fetch("/api/user/bookings")
+            .then((r) => r.json())
+            .then((data) => {
+                setBookings(Array.isArray(data) ? data : []);
+                setLoaded(true);
+            })
+            .catch(() => setLoaded(true));
+    }, [session, status]);
 
     const now = new Date();
     const upcomingTrips = bookings.filter((b) => new Date(b.startDate) >= now);
     const pastTrips = bookings.filter((b) => new Date(b.startDate) < now);
 
-    // Enrich bookings with destination image from data.ts
-    const getDestImage = (destId: string) => {
-        const d = destinations.find((x) => x.id === destId);
-        return d?.image ?? "/images/destinations/assinie.png";
-    };
-
-    const getDestDetails = (destId: string) => {
-        return destinations.find((x) => x.id === destId);
-    };
-
-    if (!loaded) {
+    if (!loaded || status === "loading") {
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <div className="w-10 h-10 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+                <Loader2 className="w-10 h-10 text-primary animate-spin" />
+            </div>
+        );
+    }
+
+    if (!session?.user) {
+        return (
+            <div className="min-h-screen bg-slate-50 font-poppins">
+                <Header />
+                <main className="container mx-auto px-6 py-32 max-w-xl text-center">
+                    <div className="text-6xl mb-6">🔐</div>
+                    <h1 className="text-3xl font-black text-slate-900 mb-4">Sign in to view your dashboard</h1>
+                    <p className="text-slate-500 mb-8">Your travel history and upcoming trips live here. Sign in to access them.</p>
+                    <Link href="/auth/signin" className="inline-block bg-primary text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-primary/20 hover:bg-orange-600 transition-colors">
+                        Sign In
+                    </Link>
+                </main>
+                <Footer />
             </div>
         );
     }
@@ -71,10 +85,10 @@ export default function DashboardPage() {
                         >
                             My Trips 🌍
                         </motion.h1>
-                        <p className="text-slate-500 mt-1">All your adventures in one place.</p>
+                        <p className="text-slate-500 mt-1">Welcome back, <span className="font-bold text-slate-700">{session.user.name?.split(" ")[0]}</span>. All your adventures in one place.</p>
                     </div>
                     <Link
-                        href="/"
+                        href="/destinations"
                         className="bg-primary text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-primary/20 hover:bg-orange-600 transition-colors flex items-center gap-2"
                     >
                         Find New Trips <ArrowRight className="w-4 h-4" />
@@ -98,7 +112,6 @@ export default function DashboardPage() {
                             {upcomingTrips.length > 0 ? (
                                 <div className="space-y-4">
                                     {upcomingTrips.map((booking, i) => {
-                                        const dest = getDestDetails(booking.destinationId);
                                         const nights = Math.ceil(
                                             (new Date(booking.endDate).getTime() - new Date(booking.startDate).getTime()) /
                                             (1000 * 60 * 60 * 24)
@@ -113,22 +126,22 @@ export default function DashboardPage() {
                                             >
                                                 <div className="md:w-48 h-36 rounded-2xl overflow-hidden shrink-0">
                                                     <img
-                                                        src={getDestImage(booking.destinationId)}
-                                                        alt={booking.destinationName}
+                                                        src={booking.destination?.image ?? "/images/destinations/assinie.png"}
+                                                        alt={booking.destination?.name ?? "Destination"}
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                     />
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="flex justify-between items-start mb-1">
-                                                        <h3 className="text-xl font-black text-slate-900">{booking.destinationName}</h3>
+                                                        <h3 className="text-xl font-black text-slate-900">{booking.destination?.name ?? "Unknown destination"}</h3>
                                                         <span className="text-xs font-black px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full capitalize">
                                                             {booking.status}
                                                         </span>
                                                     </div>
-                                                    {dest && (
+                                                    {booking.destination && (
                                                         <div className="flex items-center gap-1 text-slate-400 text-xs mb-4 font-medium">
-                                                            <MapPin className="w-3 h-3" /> {dest.region}
-                                                            <span className="ml-2 flex items-center gap-0.5"><Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {dest.rating}</span>
+                                                            <MapPin className="w-3 h-3" /> {booking.destination.region}
+                                                            <span className="ml-2 flex items-center gap-0.5"><Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {booking.destination.rating}</span>
                                                         </div>
                                                     )}
                                                     <div className="grid grid-cols-2 gap-4 mt-3">
@@ -157,7 +170,7 @@ export default function DashboardPage() {
                                     <p className="text-slate-400 mb-6 max-w-xs mx-auto text-sm">
                                         You haven&apos;t booked any trips yet. Explore our beautiful destinations!
                                     </p>
-                                    <Link href="/" className="bg-primary text-white px-6 py-3 rounded-xl font-black hover:bg-orange-600 transition-colors text-sm inline-block shadow-lg shadow-primary/20">
+                                    <Link href="/destinations" className="bg-primary text-white px-6 py-3 rounded-xl font-black hover:bg-orange-600 transition-colors text-sm inline-block shadow-lg shadow-primary/20">
                                         Explore destinations
                                     </Link>
                                 </div>
@@ -183,7 +196,7 @@ export default function DashboardPage() {
                                         <tbody className="divide-y divide-slate-50">
                                             {pastTrips.map((booking) => (
                                                 <tr key={booking.id} className="hover:bg-slate-50/40 transition-colors">
-                                                    <td className="px-6 py-4 font-bold text-slate-900">{booking.destinationName}</td>
+                                                    <td className="px-6 py-4 font-bold text-slate-900">{booking.destination?.name ?? "Unknown"}</td>
                                                     <td className="px-6 py-4 text-slate-500 text-sm">{new Date(booking.startDate).toLocaleDateString()}</td>
                                                     <td className="px-6 py-4 font-bold text-slate-900">{booking.totalPrice.toLocaleString()} FCFA</td>
                                                     <td className="px-6 py-4"><span className="text-[10px] font-black px-2 py-0.5 bg-slate-100 text-slate-400 rounded-full uppercase">Completed</span></td>
@@ -229,7 +242,7 @@ export default function DashboardPage() {
                             <p className="text-slate-400 text-xs mb-4">Your wishlist of favourite places.</p>
                             <div className="p-4 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-center">
                                 <p className="text-sm text-slate-400 font-medium">Start exploring and save your first gem!</p>
-                                <Link href="/" className="text-primary text-xs font-black mt-2 inline-block hover:underline">Browse destinations →</Link>
+                                <Link href="/destinations" className="text-primary text-xs font-black mt-2 inline-block hover:underline">Browse destinations →</Link>
                             </div>
                         </section>
                     </div>

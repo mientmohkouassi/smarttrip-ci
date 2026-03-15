@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Zap } from "lucide-react";
-import { signInLocal } from "@/lib/auth-client";
 
 function SignInContent() {
     const router = useRouter();
@@ -34,34 +33,24 @@ function SignInContent() {
         setIsLoading(true);
         setError("");
 
-        // 1. Try auth-client (localStorage accounts + demo accounts)
-        const result = signInLocal(form.email, form.password);
-        if (result.success) {
-            // Also sign in with NextAuth for demo accounts to set the session
-            const isDemoAccount =
-                form.email.toLowerCase().trim() === "user@smarttrip.ci" ||
-                form.email.toLowerCase().trim() === "partner@smarttrip.ci";
+        const result = await signIn("credentials", {
+            email: form.email,
+            password: form.password,
+            redirect: false,
+        });
 
-            if (isDemoAccount) {
-                const nextResult = await signIn("credentials", {
-                    email: form.email,
-                    password: form.password,
-                    redirect: false,
-                });
-                if (nextResult?.error) {
-                    // NextAuth failed but localStorage succeeded — still OK
-                    console.warn("NextAuth session not set, using localStorage auth only.");
-                }
-            }
+        setIsLoading(false);
 
-            setIsLoading(false);
-            doRedirect(form.email, result.user.role);
+        if (result?.error) {
+            setError(result.error === "CredentialsSignin" ? "Invalid email or password." : result.error);
             return;
         }
 
-        // 2. If signInLocal fails, show the error
-        setError(result.error);
-        setIsLoading(false);
+        // Successfully authenticated
+        // To route correctly, we might want to decode token or just redirect to dashboard
+        // For simplicity, we just trigger the generic callback
+        const isPartner = form.email.toLowerCase().trim() === "partner@smarttrip.ci";
+        doRedirect(form.email, isPartner ? "partner" : "user");
     };
 
     const quickFill = (type: "user" | "partner") => {
