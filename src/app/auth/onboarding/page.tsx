@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { getCurrentUser, completeOnboarding, type AuthUser } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import { Check, ArrowRight, MapPin, Compass, Mountain, Building2, Palette, Waves, Leaf } from "lucide-react";
 import Link from "next/link";
 
@@ -20,23 +20,21 @@ type Phase = "welcome" | "interests" | "ready";
 
 export default function OnboardingPage() {
     const router = useRouter();
-    const [user, setUser] = useState<AuthUser | null>(null);
+    const { data: session, status } = useSession();
     const [phase, setPhase] = useState<Phase>("welcome");
     const [selected, setSelected] = useState<string[]>([]);
 
-    useEffect(() => {
-        const u = getCurrentUser();
-        if (!u) {
-            router.replace("/auth/signin");
-            return;
-        }
-        // If already onboarded, skip
-        if (u.onboardingComplete) {
-            router.replace(u.role === "partner" ? "/partners/portal/dashboard" : "/dashboard");
-            return;
-        }
-        setUser(u);
-    }, [router]);
+    const user = session?.user ? {
+        name: session.user.name ?? "Traveler",
+        email: session.user.email ?? "",
+        role: (session.user as any).role ?? "user",
+    } : null;
+
+    if (status === "loading") return null;
+    if (!user) {
+        router.replace("/auth/signin");
+        return null;
+    }
 
     const toggleInterest = (id: string) => {
         setSelected((prev) =>
@@ -45,14 +43,13 @@ export default function OnboardingPage() {
     };
 
     const handleFinish = () => {
-        completeOnboarding(selected);
+        // Interests can be saved to DB via a server action in a future iteration.
+        // For now we just proceed to the next phase.
         setPhase("ready");
     };
 
-    if (!user) return null;
-
     const isPartner = user.role === "partner";
-    const destination = isPartner ? "/partners/portal/dashboard" : "/";
+    const destination = isPartner ? "/partners/portal/dashboard" : "/dashboard";
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
@@ -113,11 +110,6 @@ export default function OnboardingPage() {
                                             {user.role}
                                         </span>
                                     </div>
-                                    {user.businessName && (
-                                        <div className="mt-4 pt-4 border-t border-white/10">
-                                            <p className="text-xs text-slate-500">Business: <span className="text-slate-300 font-bold">{user.businessName}</span></p>
-                                        </div>
-                                    )}
                                 </div>
 
                                 <motion.button

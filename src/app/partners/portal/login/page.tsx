@@ -169,12 +169,6 @@ export default function PartnerLoginPage() {
                         </motion.button>
                     </form>
 
-                    {/* Divider */}
-                    <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
-                        <p className="text-xs font-black text-amber-700 uppercase tracking-widest mb-1">Demo Access</p>
-                        <p className="text-xs text-amber-700">Email: <span className="font-mono font-bold">partner@smarttrip.ci</span></p>
-                        <p className="text-xs text-amber-700">Password: <span className="font-mono font-bold">partner123</span></p>
-                    </div>
 
                     <div className="mt-6 text-center space-y-2">
                         <p className="text-slate-400 text-sm">

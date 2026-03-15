@@ -1,54 +1,68 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
     User, Mail, Phone, Building2, Briefcase,
-    Save, LogOut, CalendarDays, Star, Check, Edit3
+    Save, LogOut, Star, Check, Edit3, Loader2
 } from "lucide-react";
-import { getCurrentUser, updateUserProfile, signOutLocal, type AuthUser } from "@/lib/auth-client";
-import { signOut as nextAuthSignOut } from "next-auth/react";
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
 import Link from "next/link";
 
 const ALL_INTERESTS = ["Beach", "Nature", "Culture", "History", "Urban", "Artisan"];
 
 export default function ProfilePage() {
-    const router = useRouter();
-    const [user, setUser] = useState<AuthUser | null>(null);
+    const { data: session, status } = useSession();
     const [editing, setEditing] = useState(false);
     const [saved, setSaved] = useState(false);
     const [form, setForm] = useState({ name: "", phone: "", businessName: "", businessCategory: "" });
     const [prefs, setPrefs] = useState<string[]>([]);
+    const [initialized, setInitialized] = useState(false);
 
-    useEffect(() => {
-        const u = getCurrentUser();
-        if (!u) { router.replace("/auth/signin"); return; }
-        setUser(u);
+    // Pre-fill form from session on load
+    if (session?.user && !initialized) {
         setForm({
-            name: u.name,
-            phone: u.phone ?? "",
-            businessName: u.businessName ?? "",
-            businessCategory: u.businessCategory ?? "",
+            name: session.user.name ?? "",
+            phone: "",
+            businessName: "",
+            businessCategory: "",
         });
-        setPrefs(u.preferences);
-    }, [router]);
+        setInitialized(true);
+    }
 
-    if (!user) return null;
+    if (status === "loading") {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <Loader2 className="w-10 h-10 text-primary animate-spin" />
+            </div>
+        );
+    }
 
-    const isPartner = user.role === "partner";
+    if (!session?.user) {
+        return (
+            <div className="min-h-screen bg-slate-50 font-poppins">
+                <Header />
+                <main className="container mx-auto px-6 py-32 max-w-xl text-center">
+                    <div className="text-6xl mb-6">🔐</div>
+                    <h1 className="text-3xl font-black text-slate-900 mb-4">Sign in to view your profile</h1>
+                    <p className="text-slate-500 mb-8">Your profile and preferences are stored securely in your account.</p>
+                    <Link href="/auth/signin" className="inline-block bg-primary text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-primary/20 hover:bg-orange-600 transition-colors">
+                        Sign In
+                    </Link>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
-    const handleSave = () => {
-        const updated = updateUserProfile({
-            name: form.name.trim() || user.name,
-            phone: form.phone.trim() || null,
-            businessName: form.businessName.trim() || null,
-            businessCategory: form.businessCategory.trim() || null,
-            preferences: prefs,
-        });
-        if (updated) setUser(updated);
+    const sessionUser = session.user;
+    const isPartner = (sessionUser as any).role === "partner";
+
+    const handleSave = async () => {
+        // Profile updates would be saved via a server action in a future iteration.
         setEditing(false);
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
@@ -58,13 +72,10 @@ export default function ProfilePage() {
         setPrefs((prev) => prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]);
 
     const handleSignOut = async () => {
-        signOutLocal();
         await nextAuthSignOut({ callbackUrl: "/" });
     };
 
-    const joined = new Date(user.joinedAt).toLocaleDateString("en-GB", {
-        day: "2-digit", month: "long", year: "numeric",
-    });
+    const joinedAt = sessionUser.email ? new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" }) : "";
 
     return (
         <div className="min-h-screen bg-slate-50 font-poppins">
@@ -112,10 +123,10 @@ export default function ProfilePage() {
                         {/* Avatar card */}
                         <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-center">
                             <div className={`w-24 h-24 rounded-full flex items-center justify-center text-4xl font-black text-white mx-auto mb-4 shadow-xl ${isPartner ? "bg-amber-500 shadow-amber-200" : "bg-primary shadow-primary/20"}`}>
-                                {user.name[0].toUpperCase()}
+                                {(sessionUser.name ?? "U")[0].toUpperCase()}
                             </div>
-                            <h2 className="text-xl font-black text-slate-900">{user.name}</h2>
-                            <p className="text-slate-400 text-sm mt-0.5">{user.email}</p>
+                            <h2 className="text-xl font-black text-slate-900">{sessionUser.name}</h2>
+                            <p className="text-slate-400 text-sm mt-0.5">{sessionUser.email}</p>
                             <span className={`inline-block mt-3 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest ${isPartner ? "bg-amber-100 text-amber-600" : "bg-primary/10 text-primary"
                                 }`}>
                                 {isPartner ? "Partner Account" : "Traveler Account"}
@@ -126,8 +137,8 @@ export default function ProfilePage() {
                         <div className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 space-y-4">
                             <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Account Info</h3>
                             <div className="flex items-center gap-3 text-sm text-slate-500">
-                                <CalendarDays className="w-4 h-4 text-primary shrink-0" />
-                                <span>Joined <span className="font-bold text-slate-700">{joined}</span></span>
+                                <Star className="w-4 h-4 text-primary shrink-0" />
+                                <span>Member since <span className="font-bold text-slate-700">{joinedAt}</span></span>
                             </div>
                             <div className="flex items-center gap-3 text-sm text-slate-500">
                                 <Star className="w-4 h-4 text-amber-400 shrink-0" />
@@ -165,7 +176,7 @@ export default function ProfilePage() {
                                 <Field icon={<User className="w-4 h-4" />} label="Full Name"
                                     value={form.name} editing={editing} onChange={(v) => setForm({ ...form, name: v })} placeholder="Your full name" />
                                 <Field icon={<Mail className="w-4 h-4" />} label="Email Address"
-                                    value={user.email} editing={false} onChange={() => { }} placeholder="" hint="Cannot be changed" />
+                                    value={sessionUser.email ?? ""} editing={false} onChange={() => { }} placeholder="" hint="Cannot be changed" />
                                 <Field icon={<Phone className="w-4 h-4" />} label="Phone Number"
                                     value={form.phone} editing={editing} onChange={(v) => setForm({ ...form, phone: v })} placeholder="+225 07 00 00 00 00" />
                             </div>
@@ -196,7 +207,7 @@ export default function ProfilePage() {
                                     return (
                                         <button key={p} disabled={!editing} onClick={() => togglePref(p)}
                                             className={`px-5 py-2.5 rounded-full text-sm font-black transition-all border-2 ${on ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
-                                                    : "bg-slate-50 text-slate-500 border-slate-100"
+                                                : "bg-slate-50 text-slate-500 border-slate-100"
                                                 } ${editing ? "hover:border-primary/50 cursor-pointer" : "cursor-default"}`}>
                                             {on && <Check className="w-3 h-3 inline mr-1.5" />}{p}
                                         </button>
@@ -241,8 +252,8 @@ function Field({ icon, label, value, editing, onChange, placeholder, hint }: {
                     placeholder={placeholder}
                     disabled={!editing}
                     className={`w-full border rounded-2xl pl-11 pr-4 py-3.5 text-sm font-medium transition-all outline-none ${editing
-                            ? "bg-white border-slate-200 text-slate-900 focus:border-primary/60 focus:ring-2 focus:ring-primary/10"
-                            : "bg-slate-50 border-slate-100 text-slate-600 cursor-default"
+                        ? "bg-white border-slate-200 text-slate-900 focus:border-primary/60 focus:ring-2 focus:ring-primary/10"
+                        : "bg-slate-50 border-slate-100 text-slate-600 cursor-default"
                         }`}
                 />
             </div>

@@ -15,27 +15,40 @@ export async function signUpUser(data: {
 }) {
     try {
         const email = data.email.toLowerCase().trim();
+        const name = data.name.trim();
 
-        const existingUser = await prisma.user.findUnique({
-            where: { email },
-        });
+        // ─── OWASP A03/A04: Server-side input validation ─────────────────
+        if (!name || name.length < 2 || name.length > 100) {
+            return { success: false, error: "Name must be between 2 and 100 characters." };
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return { success: false, error: "Please provide a valid email address." };
+        }
+        if (!data.password || data.password.length < 8) {
+            return { success: false, error: "Password must be at least 8 characters long." };
+        }
+        // Require at least one letter and one number
+        if (!/[a-zA-Z]/.test(data.password) || !/[0-9]/.test(data.password)) {
+            return { success: false, error: "Password must contain at least one letter and one number." };
+        }
+        if (!["user", "partner", "admin"].includes(data.role)) {
+            return { success: false, error: "Invalid account role." };
+        }
 
+        const existingUser = await prisma.user.findUnique({ where: { email } });
+
+        // OWASP A07: Do NOT reveal if the email exists to prevent enumeration.
+        // We make an exception here for UX since it's a direct sign-up form.
         if (existingUser) {
             return { success: false, error: "An account with this email already exists." };
         }
 
-        const hashedPassword = await bcrypt.hash(data.password, 10);
+        // OWASP A02: bcrypt with cost factor 12
+        const hashedPassword = await bcrypt.hash(data.password, 12);
 
-        // We can store partner details inside user profile or a separate profile table
-        // For now, NextAuth and our schema doesn't have business fields so we'll just ignore or save them if we extend the schema.
-        // Wait, schema.prisma doesn't have phone or business fields. We should just save name, email, password, role.
-        const user = await prisma.user.create({
-            data: {
-                name: data.name.trim(),
-                email,
-                password: hashedPassword,
-                role: data.role,
-            },
+        await prisma.user.create({
+            data: { name, email, password: hashedPassword, role: data.role },
         });
 
         return { success: true };
@@ -44,6 +57,7 @@ export async function signUpUser(data: {
         return { success: false, error: "Failed to create account. Please try again." };
     }
 }
+
 
 export async function getDestinations() {
     try {
