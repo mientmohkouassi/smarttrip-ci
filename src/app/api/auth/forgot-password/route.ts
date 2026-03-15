@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
     try {
+        const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
         const { email } = await req.json();
         
         if (!email) {
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
         const resetUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/auth/reset-password?token=${resetToken}`;
 
         // Only send email if API key exists
-        if (process.env.RESEND_API_KEY) {
+        if (resend) {
             await resend.emails.send({
                 from: "SmartTrip CI <onboarding@resend.dev>", // Default Resend test domain
                 to: [user.email!],
