@@ -7,9 +7,10 @@ import { MapPin, Star, Calendar, Users, Shield, ArrowRight, CheckCircle2 } from 
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function DestinationPage({ params }: { params: { id: string } }) {
+export default async function DestinationPage({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = await params;
     const destination = await prisma.destination.findUnique({
-        where: { id: params.id },
+        where: { id: resolvedParams.id },
     });
 
     if (!destination) {
