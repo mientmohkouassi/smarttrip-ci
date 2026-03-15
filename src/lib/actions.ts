@@ -48,13 +48,24 @@ export async function signUpUser(data: {
         const hashedPassword = await bcrypt.hash(data.password, 12);
 
         await prisma.user.create({
-            data: { name, email, password: hashedPassword, role: data.role },
+            data: { 
+                name, 
+                email, 
+                password: hashedPassword, 
+                role: data.role,
+                phone: data.phone,
+                businessName: data.businessName,
+                businessCategory: data.businessCategory,
+            },
         });
 
         return { success: true };
-    } catch (error) {
-        console.error("Signup error:", error);
-        return { success: false, error: "Failed to create account. Please try again." };
+    } catch (error: any) {
+        console.error("Signup error details:", error);
+        return { 
+            success: false, 
+            error: error?.message || "Failed to create account. Please try again." 
+        };
     }
 }
 

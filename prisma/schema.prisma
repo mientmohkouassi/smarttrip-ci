@@ -45,6 +45,9 @@ model User {
   role             String    @default("user")
   resetToken       String?   @unique
   resetTokenExpiry DateTime?
+  phone            String?
+  businessName     String?
+  businessCategory String?
   accounts         Account[]
   sessions         Session[]
   bookings         Booking[]
