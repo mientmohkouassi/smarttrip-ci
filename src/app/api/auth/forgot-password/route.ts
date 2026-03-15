@@ -5,6 +5,20 @@ import { Resend } from "resend";
 
 export const dynamic = 'force-dynamic';
 
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+function isRateLimited(key: string): boolean {
+    const now = Date.now();
+    const record = rateLimitMap.get(key);
+    if (!record || now > record.resetAt) {
+        rateLimitMap.set(key, { count: 1, resetAt: now + 60 * 60 * 1000 }); // 1 hour window
+        return false;
+    }
+    if (record.count >= 5) return true; // Max 5 requests per hour
+    record.count++;
+    return false;
+}
+
 export async function POST(req: Request) {
     try {
         const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -14,8 +28,14 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Email is required" }, { status: 400 });
         }
 
+        const normalizedEmail = email.toLowerCase().trim();
+
+        if (isRateLimited(normalizedEmail)) {
+            return NextResponse.json({ error: "Too many requests. Please try again in an hour." }, { status: 429 });
+        }
+
         const user = await prisma.user.findUnique({ 
-            where: { email: email.toLowerCase().trim() } 
+            where: { email: normalizedEmail } 
         });
 
         // OWASP: Don't reveal if user exists
