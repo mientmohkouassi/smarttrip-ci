@@ -43,7 +43,9 @@ export default function SignUpPage() {
     };
 
     const validateStep2 = () => {
-        if (form.password.length < 6) return "Password must be at least 6 characters.";
+        if (form.password.length < 8) return "Password must be at least 8 characters.";
+        if (!/[a-zA-Z]/.test(form.password) || !/[0-9]/.test(form.password))
+            return "Password must contain at least one letter and one number.";
         if (form.password !== form.confirm) return "Passwords don't match.";
         return null;
     };
@@ -70,9 +72,6 @@ export default function SignUpPage() {
         setIsLoading(true);
         setError("");
 
-        // Simulate network delay
-        await new Promise((r) => setTimeout(r, 1200));
-
         const result = await signUpUser({
             name: form.name,
             email: form.email,
@@ -86,8 +85,16 @@ export default function SignUpPage() {
         setIsLoading(false);
 
         if (!result.success) {
-            setError(result.error || "Signup failed");
-            setStep(1);
+            const msg = result.error || "Signup failed. Please try again.";
+            // Route the user back to the step that corresponds to the error
+            if (msg.toLowerCase().includes("email") || msg.toLowerCase().includes("account")) {
+                setStep(1);
+            } else if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("name")) {
+                setStep(2);
+            } else {
+                setStep(3);
+            }
+            setError(msg);
             return;
         }
 
@@ -219,7 +226,7 @@ export default function SignUpPage() {
                                             type={showPassword ? "text" : "password"}
                                             value={form.password}
                                             onChange={(e) => update("password", e.target.value)}
-                                            placeholder="Min. 6 characters"
+                                            placeholder="Min. 8 chars, include a number"
                                             autoFocus
                                             className="w-full bg-white/5 border border-white/10 text-white placeholder:text-slate-600 rounded-2xl pl-11 pr-12 py-4 text-sm font-medium focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/10 transition-all"
                                         />
