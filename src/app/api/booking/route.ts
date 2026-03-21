@@ -8,7 +8,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { destinationId, startDate, endDate, totalPrice, guestName, guestEmail } = body;
 
-        if (!destinationId || !startDate || !endDate || !totalPrice) {
+        if (!destinationId || !startDate || !endDate) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
                     destinationId,
                     startDate: new Date(startDate),
                     endDate: new Date(endDate),
-                    totalPrice,
+                    totalPrice: destination.price, // OWASP A01: Trust DB price, not client
                     status: "confirmed",
                 },
             });
@@ -38,7 +38,8 @@ export async function POST(req: Request) {
             bookingId = `STR-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
         }
 
-        console.log(`[Booking] ${bookingId} | ${destination.name} | ${guestName} <${guestEmail}>`);
+        // OWASP A09: Avoid logging PII like email/full names in production logs
+        console.log(`[Booking] ${bookingId} | ${destination.name}`);
 
         return NextResponse.json({
             id: bookingId,
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
             guestName: guestName || "Guest",
             startDate,
             endDate,
-            totalPrice,
+            totalPrice: destination.price,
         });
     } catch (error) {
         console.error("[Booking API] Error:", error);

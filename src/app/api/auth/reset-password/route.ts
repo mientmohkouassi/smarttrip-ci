@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 export const dynamic = 'force-dynamic';
 
@@ -30,8 +31,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Too many attempts. Please try again later." }, { status: 429 });
         }
 
+        // Hash the incoming token to match the database (OWASP A02)
+        const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
         const user = await prisma.user.findUnique({
-            where: { resetToken: token },
+            where: { resetToken: hashedToken },
         });
 
         if (!user || !user.resetTokenExpiry || user.resetTokenExpiry < new Date()) {

@@ -62,7 +62,6 @@ function BookingContent() {
                     destinationId: destination!.id,
                     startDate: form.checkIn,
                     endDate: form.checkOut,
-                    totalPrice: destination!.price,
                     guestName: form.name,
                     guestEmail: form.email,
                 }),

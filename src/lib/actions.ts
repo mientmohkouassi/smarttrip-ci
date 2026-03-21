@@ -35,9 +35,9 @@ export async function signUpUser(data: {
         if (!/[a-zA-Z]/.test(data.password) || !/[0-9]/.test(data.password)) {
             return { success: false, error: "Password must contain at least one letter and one number." };
         }
-        if (!["user", "partner", "admin"].includes(data.role)) {
-            return { success: false, error: "Invalid account role." };
-        }
+        // OWASP A01: Prevent privilege escalation. New users are 'user' by default.
+        // Admin or Partner roles should be granted by an existing administrator.
+        const finalizedRole = (data.role === "admin") ? "user" : data.role;
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
 
@@ -55,7 +55,7 @@ export async function signUpUser(data: {
                 name, 
                 email, 
                 password: hashedPassword, 
-                role: data.role,
+                role: finalizedRole,
                 phone: data.phone,
                 businessName: data.businessName,
                 businessCategory: data.businessCategory,
@@ -127,15 +127,27 @@ export async function getDestinationById(id: string) {
     }
 }
 
-export async function createBooking(userId: string, destinationId: string, startDate: Date, endDate: Date, totalPrice: number) {
+import { auth } from "@/auth";
+
+export async function createBooking(destinationId: string, startDate: Date, endDate: Date) {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, error: "You must be logged in to book." };
+    }
+    const userId = (session.user as any).id;
+
     try {
+        // Recalculate or verify price from DB to prevent price manipulation
+        const destination = await prisma.destination.findUnique({ where: { id: destinationId } });
+        if (!destination) return { success: false, error: "Destination not found." };
+
         const booking = await prisma.booking.create({
             data: {
                 userId,
                 destinationId,
                 startDate,
                 endDate,
-                totalPrice,
+                totalPrice: destination.price, // Trust DB price, not client
                 status: "confirmed"
             },
             include: {
@@ -161,7 +173,7 @@ export async function createBooking(userId: string, destinationId: string, start
                                 <h3 style="margin-top: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;">Itinerary Details</h3>
                                 <p style="margin: 10px 0;"><strong>Destination:</strong> ${booking.destination.name}</p>
                                 <p style="margin: 10px 0;"><strong>Dates:</strong> ${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}</p>
-                                <p style="margin: 10px 0;"><strong>Total Price:</strong> ${totalPrice.toLocaleString()} FCFA</p>
+                                <p style="margin: 10px 0;"><strong>Total Price:</strong> ${booking.totalPrice.toLocaleString()} FCFA</p>
                                 <p style="margin: 10px 0;"><strong>Status:</strong> <span style="color: #10b981; font-weight: bold;">Confirmed</span></p>
                             </div>
 

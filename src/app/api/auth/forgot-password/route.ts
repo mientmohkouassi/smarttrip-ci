@@ -43,13 +43,17 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "If an account exists, a reset link has been sent." });
         }
 
-        // Generate token
+        // Generate token and store its hash (OWASP A02: Cryptographic Failures)
         const resetToken = crypto.randomBytes(32).toString("hex");
+        const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
         const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
 
         await prisma.user.update({
             where: { id: user.id },
-            data: { resetToken, resetTokenExpiry },
+            data: { 
+                resetToken: hashedToken, 
+                resetTokenExpiry 
+            },
         });
 
         const resetUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/auth/reset-password?token=${resetToken}`;
